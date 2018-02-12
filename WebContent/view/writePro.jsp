@@ -11,12 +11,12 @@
 
 <% request.setCharacterEncoding("euc-kr"); %>
 
-<jsp:useBean id = "article" class = "board.BoardDataBean">
-<jsp:setProperty name ="article" property="*"/>
+<jsp:useBean id = "member" class = "board.BoardDataBean">
+<jsp:setProperty name ="member" property="*"/>
 </jsp:useBean>
-<% System.out.println(article); %>
+<% System.out.println(member); %>
 <% BoardDBBean dbPro = BoardDBBean.getInstance();
-	dbPro.insertArticle(article);
+	dbPro.insertArticle(member);
 	response.sendRedirect("list.jsp");
 
 %>

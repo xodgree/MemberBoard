@@ -17,12 +17,23 @@
 <!-- list.css -->
 <link rel="stylesheet" href ="/MemberBoard/view/list.css">
 
+
+
+<html>
+<script>
+$(document).ready(function(){
+    $(".form-control").popover({title: "Search Here", placement: "top"});
+   })
+</script>
+  
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
 <%
-	/* BoardDBBean connect = new BoardDBBean();	//객체를 생성합니다. BoardDBBean메소드들을 쓰기위하여.
-	connect.getConnection();		//연결
-	connect.getUsers();				//db에서 꺼내옴. */
 	//페이지 5개씩 목록하단 에 나오게 변수 설정 
-	int pageSize = 5;
+/* 	int pageSize = 5;
 		//가입일자 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		//pageNum을 받아서 if pageNum == null이면 1이됨.
@@ -37,39 +48,33 @@
 		// 현재(2) = (2-1)*5+1 => 6
 		//끝페이지 = 2 * 5 = 10
 		int startRow = (currentPage - 1) * pageSize + 1;
-		int endRow = currentPage * pageSize;
+		int endRow = currentPage * pageSize; */
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		int count = 0;
 		int number = 0;
 		List articleList = null;
+		BoardDBBean dbPro = BoardDBBean.getInstance();
+		count = dbPro.getDataCount();
+		if(count > 0){
+			articleList = dbPro.articleList();
+		}
+		articleList = dbPro.articleList();
 		/* BoardDBBean connect = new BoardDBBean();
 		connect.getConnection();
 		articleList = connect.getArticles(); */
 		
 		 		
 %>
-
-<html>
-<script>
-$(document).ready(function(){
-    $(".form-control").popover({title: "Search Here", placement: "top"});
-   })
-</script>
-  
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<title>Insert title here</title>
-</head>
-<body>
 <!-- 자바스크립트 -->
 
  
- <!-- html  -->    
+ <!-- html  -->
  <div class="container-fluid">
     <div class="panel panel-success">
       <div class="panel-heading">
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-3">
-            <h2 class="text-center pull-left" style="padding-left: 30px;"> <span class="glyphicon glyphicon-list-alt"> </span> 회원목록 </h2>
+            <h2 class="text-center pull-left" style="padding-left: 30px;"> <span class="glyphicon glyphicon-list-alt"> </span> 회원목록<br>(전체 회원:<%=count%>) </h2>
           </div>
           <div class="col-xs-9 col-sm-9 col-md-9">
             <div class="col-xs-12 col-sm-12 col-md-12">
@@ -86,8 +91,17 @@ $(document).ready(function(){
               </div>
             </div>
           </div>
+          <!-- 회원등록 -->
+          <div>
+          	<a href = "writeForm.jsp">회원등록</a>
+          </div>
         </div>
       </div>
+      <%if(count ==0){
+    	  %>
+    	  <td align ="center"> 게시판에 저장된 글이 없습니다.</td>
+    	 <%}else{ %>
+      
 
       <div class="panel-body table-responsive">
         <table class="table table-hover">
@@ -103,20 +117,22 @@ $(document).ready(function(){
           </thead>
 
           <tbody>
-          <% for(int i =0; i < articleList.size();i++){
-        	  BoardDataBean article = (BoardDataBean)articleList.get(i); %>
-        	  <tr class="edit" id="detail">
+    
+         <% for(int i =0; i < articleList.size();i++){
+        	  BoardDataBean article = (BoardDataBean)articleList.get(i); 
+         %>
+        	 <tr class="edit" id="detail">
               <td id="no" class="text-center"> <%= article.getNum()%> </td>
               <td id="email" class="text-center">   <%= article.getEmail() %>  </td>
               <td id="name" class="text-center"> <%= article.getName() %> </td>
               <td id="passwd" class="text-center"> <%= article.getPasswd() %> </td>
-              <td id="regdt" class="text-center">  <%= sdf.format(article.getRegdt()) %> </td>
-            </tr>  
-          <% } %>
+              <td id="regdt" class="text-center">  <%= sdf.format(article.getRegdate()) %> </td>
+            
+            </tr><%} %>  
           </tbody>
         </table>
       </div>
-
+	<%} %>
       <div class="panel-footer">
         <div class="row">
           <div class="col-lg-12">

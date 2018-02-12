@@ -1,14 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <!-- 합쳐지고 최소화된 최신 CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
 <!-- 부가적인 테마 -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
 
-<!-- 합쳐지고 최소화된 최신 자바스크립트 -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
 <html lang="en">
 <head>
     <!-- Standard Meta -->
@@ -40,7 +42,7 @@ if(request.getParameter("num")!=null){
 %>
 <body>
 <div class="container">
-    <form class="form-horizontal" role="form" method="POST" action="/register">
+   <form method = "post" name ="writeform" action="<%= request.getContextPath() %>/view/writePro.jsp">
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-6">
@@ -48,7 +50,6 @@ if(request.getParameter("num")!=null){
                 <hr>
             </div>
         </div>
-        <from method = "post" name ="writeform" action="<%= request.getContextPath() %>/view/writePro.jsp">
         <input type ="hidden" name = "num" value ="<%=num %>">
         
         <div class="row">

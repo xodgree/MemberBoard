@@ -45,8 +45,28 @@ public class BoardDBBean {
 	   return con;
 	   }
 
+	//Count 세는 메소드
+	public int getDataCount() {
+		String sql = "select nvl(count(*),0) from users";
+		Connection con = getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int count = 0;
+		try {
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {count =rs.getInt(1);}
+		}catch(Exception e) {
+			e.printStackTrace();
+			
+		}finally {
+			close(con,rs,pstmt);
+		}
+		return count;
+	}
+	
 	// 데이터 가져오는 메소드
-	public List getArticles() {
+	public List articleList() {
 		// Connection, PreparedStatement, ResultSet 등 
 		// DB에 접속하여 작업하기 위해 필요한 레퍼런스 변수를 선언합니다.
 		// 위의 3가지는 DB 작업에 필요한 기본 요소들입니다.
@@ -61,7 +81,7 @@ public class BoardDBBean {
 		try {
 			conn = getConnection();		//conn에 getConnection메소드를 넣음. 즉, con을 넣음.
 			// PreparedStatement로 실행할 쿼리를 만듭니다.
-			sql = "select * from users";		//users테이블 전체 조회 쿼리 날림.
+			sql = "select num,email,name,passwd,regdate from users";		//users테이블 전체 조회 쿼리 날림.
 			
 			// Connection에 쿼리를 등록하고 PreparedStatement에 넣습니다.
 			pstmt = conn.prepareStatement(sql); //pstmt = sql 쿼리를 담음 
@@ -71,6 +91,7 @@ public class BoardDBBean {
 			rs = pstmt.executeQuery();
 			
 			// ResultSet의 데이터를 확인합니다
+			
 			// ResultSet.next()는 처음 실행되면 ResultSet이 가지고 있는 첫번째 데이터를 가리킵니다.
 			// 만약 ResultSet이 가지고 있는 데이터가 없다면 null을 return합니다.
 			if(rs.next()) {
@@ -82,10 +103,11 @@ public class BoardDBBean {
 					// ResultSet에서 필요한 데이터를 column 이름으로 각각 얻습니다.
 					// 얻은 데이터는 Model인 BoardDataBean 객체의 setter를 이용해서 값을 설정해줍니다.
 					article.setNum(rs.getInt("num"));
+					//System.out.println("숫자넘어우나"+rs.getInt("num"));
 					article.setEmail(rs.getString("email"));
 					article.setName(rs.getString("name"));
 					article.setPasswd(rs.getString("passwd"));
-					article.setRegdt(rs.getTimestamp("regdt"));
+					article.setRegdate(rs.getTimestamp("regdate"));
 					
 					// ResultSet의 데이터, 즉, Article 데이터가 BoardDataBean 객체로 전달되었습니다.
 					// 앞에서 만들어 둔 BoardDataBean 객체를 보관하기 위해서 생성하였던 ArrayList에 저장합니다.
@@ -109,7 +131,7 @@ public class BoardDBBean {
 	
 	//회원 등록, 데이터 삽입 메소드
 	//	리턴 타입 void, BoardDataBean type의 article을 매개변수로 받음
-	public void insertArticle(BoardDataBean article) {
+	public void insertArticle(BoardDataBean member) {
 		//쿼리를 저장할 sql 변수 선언
 		String sql ="";
 		//db와 커넥션 해줌.
@@ -131,18 +153,22 @@ public class BoardDBBean {
 			// 만약 ResultSet이 가지고 있는 데이터가 없다면  number은 1이다.
 			else
 				number = 1;
-			int num = article.getNum();
+		
 		
 		
 		//데이터 삽입 sql쿼리 작성
-		sql = "insert into users(num,name,email,passwd,regdt)"+"values(?,?,?,?,sysdate)";
+		sql = "insert into users(num,name,email,passwd,regdate)"+"values(?,?,?,?,sysdate)";
 		
 		pstmt = con.prepareStatement(sql);
 		//위에서 쓴 시퀀스 이용
 		pstmt.setInt(1, number);
-		pstmt.setString(2, article.getName());
-		pstmt.setString(3, article.getEmail());
-		pstmt.setString(4, article.getPasswd());
+	
+		pstmt.setString(2, member.getName());
+		
+		pstmt.setString(3, member.getEmail());
+		
+		pstmt.setString(4, member.getPasswd());
+		
 		
 		pstmt.executeUpdate();
 		

@@ -7,7 +7,7 @@ public class BoardDataBean {
 	private String name;
 	private String email;
 	private String passwd;
-	private Date regdt;
+	private Date regdate;
 	
 	//getter setter 이용해서 가져옴.
 	public int getNum() {
@@ -41,18 +41,18 @@ public class BoardDataBean {
 		this.passwd = passwd;
 	}
 
-	public Date getRegdt() {
-		return regdt;
+	public Date getRegdate() {
+		return regdate;
 	}
 
-	public void setRegdt(Date regdt) {
-		this.regdt = regdt;
+	public void setRegdate(Date regdate) {
+		this.regdate = regdate;
 	}
 
 	@Override
 	public String toString() {
 		return "BoardDataBeen [num=" + num + ", name=" + name + ", email=" + email + ", passwd=" + passwd + ", regdt="
-				+ regdt + "]";
+				+ regdate + "]";
 	}
 	
 	/*
