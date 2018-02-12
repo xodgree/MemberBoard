@@ -119,8 +119,11 @@ $(document).ready(function(){
           <tbody>
     
          <% for(int i =0; i < articleList.size();i++){
-        	  BoardDataBean article = (BoardDataBean)articleList.get(i); 
-         %>
+        	  BoardDataBean article = (BoardDataBean)articleList.get(i);
+        	  %>
+        	  <!-- 글 클릭시 글 보기 페이지로 넘어감.-->
+        	  <a href="viewContent.jsp?"></a>
+         
         	 <tr class="edit" id="detail">
               <td id="no" class="text-center"> <%= article.getNum()%> </td>
               <td id="email" class="text-center">   <%= article.getEmail() %>  </td>
@@ -139,7 +142,7 @@ $(document).ready(function(){
             <div class="col-md-8">
               </div>
               <div class="col-md-4">
-              <p class="muted pull-right"><strong> 토닥토닥 </strong></p>
+              <p class="muted pull-right"><strong> 토닥토닥 company</strong></p>
             </div>
           </div>
         </div>

@@ -194,6 +194,33 @@ public class BoardDBBean {
 			}catch(SQLException ex) {
 		}
 	}
+	
+	//글 보기 메소드
+	public BoardDataBean getContent() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		BoardDataBean member = null;
+		String sql ="";
+		try {
+			conn = getConnection();
+			if(rs.next()) {
+				member = new BoardDataBean();
+				member.setNum(rs.getInt("num"));
+				member.setEmail(rs.getString("email"));
+				member.setName(rs.getString("name"));
+				member.setPasswd(rs.getString("passwd"));
+				member.setRegdate(rs.getTimestamp("regdate"));
+	
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			close(conn,rs,pstmt);
+		}
+		return member;
+		
+	}
 }
 
 
