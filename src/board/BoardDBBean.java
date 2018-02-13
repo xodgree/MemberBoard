@@ -1,5 +1,6 @@
 package board;
 
+import java.beans.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -33,7 +34,6 @@ public class BoardDBBean {
 	      
 	      // DB URL,계정, 비밀번호를 가지고 DB에 접속합니다. 접속 결과를 con에 저장합니다.
 	      con = DriverManager.getConnection(jdbcUrl, dbUser, dbPass);
-	      System.out.println("연결되었습니다.");
 	      
 	   // 예외(Exception)가 발생하면 어떤 문제인지 파악하기 위한 코드가 여기에 들어갑니다.
 	   }catch(Exception e) {
@@ -81,7 +81,7 @@ public class BoardDBBean {
 		try {
 			conn = getConnection();		//conn에 getConnection메소드를 넣음. 즉, con을 넣음.
 			// PreparedStatement로 실행할 쿼리를 만듭니다.
-			sql = "select num,email,name,passwd,regdate from users";		//users테이블 전체 조회 쿼리 날림.
+			sql = "select num,email,name,passwd,regdate from users order by num desc";		//users테이블 전체 조회 쿼리 날림.
 			
 			// Connection에 쿼리를 등록하고 PreparedStatement에 넣습니다.
 			pstmt = conn.prepareStatement(sql); //pstmt = sql 쿼리를 담음 
@@ -196,7 +196,7 @@ public class BoardDBBean {
 	}
 	
 	//글 보기 메소드
-	public BoardDataBean getContent() {
+	public BoardDataBean getContent(int num) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -204,6 +204,11 @@ public class BoardDBBean {
 		String sql ="";
 		try {
 			conn = getConnection();
+			sql = "select * from users where num =?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			rs = pstmt.executeQuery();
+			
 			if(rs.next()) {
 				member = new BoardDataBean();
 				member.setNum(rs.getInt("num"));
@@ -220,6 +225,27 @@ public class BoardDBBean {
 		}
 		return member;
 		
+	}
+	//글 수정 메소드
+	public int updateContent(BoardDataBean member) {
+		Connection conn =null;
+		PreparedStatement pstmt = null;
+		int pwdck = 0;
+		try {
+			conn = getConnection();
+			String sql = "update users set email=?,name=?,passwd=? where num=? and passwd = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, member.getEmail());
+			pstmt.setString(2, member.getName());
+			pstmt.setInt(3, member.getNum());
+			pstmt.setString(4, member.getPasswd());
+			pwdck = pstmt.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			close(conn,null,pstmt);
+		}
+		return pwdck;
 	}
 }
 

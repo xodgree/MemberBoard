@@ -122,11 +122,10 @@ $(document).ready(function(){
         	  BoardDataBean article = (BoardDataBean)articleList.get(i);
         	  %>
         	  <!-- 글 클릭시 글 보기 페이지로 넘어감.-->
-        	  <a href="viewContent.jsp?"></a>
          
         	 <tr class="edit" id="detail">
               <td id="no" class="text-center"> <%= article.getNum()%> </td>
-              <td id="email" class="text-center">   <%= article.getEmail() %>  </td>
+              <td id="email" class="text-center"><a href="viewContent.jsp?num=<%=article.getNum()%>"> <%= article.getEmail() %></a></td>
               <td id="name" class="text-center"> <%= article.getName() %> </td>
               <td id="passwd" class="text-center"> <%= article.getPasswd() %> </td>
               <td id="regdt" class="text-center">  <%= sdf.format(article.getRegdate()) %> </td>

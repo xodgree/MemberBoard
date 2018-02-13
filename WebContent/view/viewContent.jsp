@@ -39,14 +39,16 @@
 </head>
 
 <%
+int num =Integer.parseInt(request.getParameter("num"));
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 try{
 	BoardDBBean dbPro = BoardDBBean.getInstance();
-	BoardDataBean member = dbPro.getContent();
+	BoardDataBean member = dbPro.getContent(num);
+
 %>
 <body>
 <div class="container">
-   <form method = "post" name ="writeform" action="<%= request.getContextPath() %>/view/writePro.jsp">
+   <%-- <form method = "post" name ="writeform" action="<%= request.getContextPath() %>/view/writePro.jsp"> --%>
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-6">
@@ -59,14 +61,17 @@ try{
             <div class="col-md-3 field-label-responsive">
             
                 <label for="name">닉네임</label> 
+                
             </div>
+            		<%-- <%= member.getName()%> --%>
             <div class="col-md-6">
                 <div class="form-group">
                     <div class="input-group mb-2 mr-sm-2 mb-sm-0">
                         <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-user"></i></div>
-                       	    콩콩히
-                       <!--<input type="text" name="name" class="form-control" id="name"
+                       	   
+                      <!--  <input type="text" name="name" class="form-control" id="name"
                                placeholder="name" required autofocus> -->
+                               &nbsp; &nbsp; <%=member.getName() %>
                              
                     </div>
                 </div>
@@ -88,8 +93,9 @@ try{
                 <div class="form-group">
                     <div class="input-group mb-2 mr-sm-2 mb-sm-0">
                         <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-at"></i></div>
-                        <input type="text" name="email" class="form-control" id="email"
-                               placeholder="you@example.com" required autofocus>
+                        <!-- <input type="text" name="email" class="form-control" id="email"
+                               placeholder="you@example.com" required autofocus> -->
+                               &nbsp; &nbsp; <%=member.getEmail() %>
                     </div>
                 </div>
             </div>
@@ -109,8 +115,9 @@ try{
                 <div class="form-group has-danger">
                     <div class="input-group mb-2 mr-sm-2 mb-sm-0">
                         <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-key"></i></div>
-                        <input type="password" name="passwd" class="form-control" id="passwd"
-                               placeholder="Password" required>
+                       <!--  <input type="password" name="passwd" class="form-control" id="passwd"
+                               placeholder="Password" required> -->
+                               &nbsp; &nbsp; <%=member.getPasswd() %>
                     </div>
                 </div>
             </div>
@@ -122,7 +129,7 @@ try{
                 </div>
             </div> -->
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-3 field-label-responsive">
                 <label for="password">비밀번호 확인</label>
             </div>
@@ -137,11 +144,18 @@ try{
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-6">
-                <button type="submit" class="btn btn-success"><i class="fa fa-user-plus"></i> 등록</button>
+                <input type="submit" class="btn btn-warning btn-sm" value="회원수정" 
+                 onclick = "document.location.href='updateForm.jsp?num=<%=member.getNum()%>'">
+                
+                <input type="submit" class="btn btn-danger  btn-sm" value="회원삭제" 
+                 onclick = "document.location.href='updateForm.jsp?num=<%=member.getNum()%>'">
+                 
+                <input type="submit" class="btn btn-primary btn-sm" value = "회원목록"
+                 onclick = "document.location.href='list.jsp?num=<%=member.getNum()%>'">
             </div>
         </div>
     </form>
