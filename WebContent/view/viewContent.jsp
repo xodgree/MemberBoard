@@ -43,7 +43,7 @@ int num =Integer.parseInt(request.getParameter("num"));
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 try{
 	BoardDBBean dbPro = BoardDBBean.getInstance();
-	BoardDataBean member = dbPro.getContent(num);
+	BoardDataBean member = dbPro.getContent(num,"content");
 
 %>
 <body>
@@ -152,7 +152,7 @@ try{
                  onclick = "document.location.href='updateForm.jsp?num=<%=member.getNum()%>'">
                 
                 <input type="submit" class="btn btn-danger  btn-sm" value="회원삭제" 
-                 onclick = "document.location.href='updateForm.jsp?num=<%=member.getNum()%>'">
+         		 onclick = "document.location.href='deleteForm.jsp?num=<%=member.getNum()%>'">
                  
                 <input type="submit" class="btn btn-primary btn-sm" value = "회원목록"
                  onclick = "document.location.href='list.jsp?num=<%=member.getNum()%>'">

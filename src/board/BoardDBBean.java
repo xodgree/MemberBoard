@@ -1,6 +1,6 @@
 package board;
 
-import java.beans.Statement;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import oracle.jdbc.proxy.annotation.Pre;
 
 public class BoardDBBean {
 	private static BoardDBBean instance = new BoardDBBean();
@@ -65,7 +67,7 @@ public class BoardDBBean {
 		return count;
 	}
 	
-	// 데이터 가져오는 메소드
+	// 데이터 가져오는 메소드 (getArticles)
 	public List articleList() {
 		// Connection, PreparedStatement, ResultSet 등 
 		// DB에 접속하여 작업하기 위해 필요한 레퍼런스 변수를 선언합니다.
@@ -195,8 +197,8 @@ public class BoardDBBean {
 		}
 	}
 	
-	//글 보기 메소드
-	public BoardDataBean getContent(int num) {
+	//글 보기 메소드 (getArticle)
+	public BoardDataBean getContent(int num,String chk) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -227,10 +229,10 @@ public class BoardDBBean {
 		
 	}
 	//글 수정 메소드
-	public int updateContent(BoardDataBean member) {
+	public int updatemember(BoardDataBean member) {
 		Connection conn =null;
 		PreparedStatement pstmt = null;
-		int pwdck = 0;
+		int pwdck = 0;	//비밀번호 체크
 		try {
 			conn = getConnection();
 			String sql = "update users set email=?,name=?,passwd=? where num=? and passwd = ?";
@@ -246,6 +248,25 @@ public class BoardDBBean {
 			close(conn,null,pstmt);
 		}
 		return pwdck;
+	}
+	//삭제 메소드
+	public int deletemember(int num,String passwd)throws Exception{
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "delete from users where num=? and passwd=?";
+		int x = -1;
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1,num);
+			pstmt.setString(2, passwd);
+			x = pstmt.executeUpdate();
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}finally {
+			close(conn,rs,pstmt);
+		}return x;
 	}
 }
 

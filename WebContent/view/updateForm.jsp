@@ -1,3 +1,5 @@
+<%@page import="board.BoardDBBean"%>
+<%@page import="board.BoardDataBean"%>
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -35,14 +37,16 @@
 </head>
 
 <%
-int num = 0;
-if(request.getParameter("num")!=null){
-	num = Integer.parseInt(request.getParameter("num"));
-};
+	int num = Integer.parseInt(request.getParameter("num"));
+	try{
+		BoardDBBean dbPro = BoardDBBean.getInstance();
+		BoardDataBean member = dbPro.getContent(num,"update");
 %>
 <body>
 <div class="container">
-   <form method = "post" name ="writeform" action="<%= request.getContextPath() %>/view/writePro.jsp">
+   <form method = "post" name ="writeform" action="<%= request.getContextPath() %>/view/updatePro.jsp">
+   <input type = "hidden" name = "num" value="<%=num %>">
+   
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-6">
@@ -50,7 +54,6 @@ if(request.getParameter("num")!=null){
                 <hr>
             </div>
         </div>
-        <input type ="hidden" name = "num" value ="<%=num %>">
         
         <div class="row">
             <div class="col-md-3 field-label-responsive">
@@ -61,7 +64,7 @@ if(request.getParameter("num")!=null){
                     <div class="input-group mb-2 mr-sm-2 mb-sm-0">
                         <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-user"></i></div>
                         <input type="text" name="name" class="form-control" id="name"
-                               placeholder="name" required autofocus>
+                               placeholder="name" required autofocus value ="<%= member.getName() %>">
                     </div>
                 </div>
             </div>
@@ -82,7 +85,7 @@ if(request.getParameter("num")!=null){
                     <div class="input-group mb-2 mr-sm-2 mb-sm-0">
                         <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-at"></i></div>
                         <input type="text" name="email" class="form-control" id="email"
-                               placeholder="you@example.com" required autofocus>
+                               placeholder="you@example.com" required autofocus value ="<%= member.getEmail() %>">
                     </div>
                 </div>
             </div>
@@ -115,7 +118,7 @@ if(request.getParameter("num")!=null){
                 </div>
             </div> -->
         </div>
-        <div class="row">
+       <!--  <div class="row">
             <div class="col-md-3 field-label-responsive">
                 <label for="password">비밀번호 확인</label>
             </div>
@@ -130,13 +133,22 @@ if(request.getParameter("num")!=null){
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-6">
-                <button type="submit" class="btn btn-success"><i class="fa fa-user-plus"></i> 등록</button>
+              <input type="submit" class="btn btn-warning btn-sm" value="회원수정" >
+                
+                <input type="reset" class="btn btn-danger  btn-sm" value="다시작성">
+                 
+                <input type="button" class="btn btn-primary btn-sm" value = "회원목록"
+                 onclick = "document.location.href='list.jsp?num=<%=member.getNum()%>'">
             </div>
         </div>
     </form>
 </div>
+<%
+	}catch(Exception e){}
+%>
 </body>
+</html>
