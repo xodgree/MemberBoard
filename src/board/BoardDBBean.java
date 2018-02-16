@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import oracle.jdbc.proxy.annotation.Pre;
 
 public class BoardDBBean {
 	private static BoardDBBean instance = new BoardDBBean();
@@ -68,7 +67,7 @@ public class BoardDBBean {
 	}
 	
 	// 데이터 가져오는 메소드 (getArticles)
-	public List articleList() {
+	public List articleList(int startRow,int endRow) {
 		// Connection, PreparedStatement, ResultSet 등 
 		// DB에 접속하여 작업하기 위해 필요한 레퍼런스 변수를 선언합니다.
 		// 위의 3가지는 DB 작업에 필요한 기본 요소들입니다.
@@ -83,11 +82,29 @@ public class BoardDBBean {
 		try {
 			conn = getConnection();		//conn에 getConnection메소드를 넣음. 즉, con을 넣음.
 			// PreparedStatement로 실행할 쿼리를 만듭니다.
-			sql = "select num,email,name,passwd,regdate from users order by num desc";		//users테이블 전체 조회 쿼리 날림.
+			//sql = "select num,email,name,passwd,regdate from users order by num desc";		//users테이블 전체 조회 쿼리 날림.
+
+          /* sql = "select * from ("
+        		   +"select rownum, b.* from" 
+        		  +"(select num,email,name,passwd,regdate from users order by regdate)b order by rownum desc"
+        		   +")where rownum between ? and ?";*/
+           
+           sql = "select * from ("
+        		  +"select rownum rnum, b.* from" 
+        		   +"(select num,email,name,passwd,regdate from users order by regdate desc)b"
+        		   +")where rnum between ? and ?";
+          // sql = "select rownum, b.* from (select num,email,name,passwd,regdate from users)b where rnum between ? and ?";
 			
-			// Connection에 쿼리를 등록하고 PreparedStatement에 넣습니다.
+          
+			/* sql = " select * from" + "( select rownum rnum ,a.* "
+			         + " from (select num,email,name,passwd,regdate"
+			         + "from users) "
+			         + " a ) where rnum between ? and ? ";*/
+           // Connection에 쿼리를 등록하고 PreparedStatement에 넣습니다.
 			pstmt = conn.prepareStatement(sql); //pstmt = sql 쿼리를 담음 
 			
+			pstmt.setInt(1, startRow);
+			pstmt.setInt(2, endRow);
 			// PreparedStatement로 등록된 쿼리를 실행합니다.
 			// Select 쿼리이므로 ResultSet으로 그 결과를 얻습니다.
 			rs = pstmt.executeQuery();
@@ -122,7 +139,7 @@ public class BoardDBBean {
 		}catch (Exception e){
 			e.printStackTrace();
 		}finally {
-			//close(conn,rs,pstmt);
+			close(conn,rs,pstmt);
 			
 			//System.out.println(articleList);
 		}
@@ -228,14 +245,15 @@ public class BoardDBBean {
 		return member;
 		
 	}
+	
 	//글 수정 메소드
 	public int updatemember(BoardDataBean member) {
 		Connection conn =null;
 		PreparedStatement pstmt = null;
-		int pwdck = 0;	//비밀번호 체크
+		int pwdck = 0;	//비밀번호 체크?
 		try {
 			conn = getConnection();
-			String sql = "update users set email=?,name=?,passwd=? where num=? and passwd = ?";
+			String sql = "update users set email=?,name=? where num=? and passwd = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getEmail());
 			pstmt.setString(2, member.getName());
@@ -249,6 +267,7 @@ public class BoardDBBean {
 		}
 		return pwdck;
 	}
+	
 	//삭제 메소드
 	public int deletemember(int num,String passwd)throws Exception{
 		Connection conn = null;

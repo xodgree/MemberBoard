@@ -40,6 +40,11 @@
 
 <%
 int num =Integer.parseInt(request.getParameter("num"));
+//페이지 번호 넘기기
+String pageNum = request.getParameter("pageNum");
+if(pageNum == null || pageNum == ""){
+	pageNum = "1";
+}
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 try{
 	BoardDBBean dbPro = BoardDBBean.getInstance();
@@ -149,13 +154,15 @@ try{
             <div class="col-md-3"></div>
             <div class="col-md-6">
                 <input type="submit" class="btn btn-warning btn-sm" value="회원수정" 
-                 onclick = "document.location.href='updateForm.jsp?num=<%=member.getNum()%>'">
+                 onclick = "document.location.href='updateForm.jsp?num=<%=member.getNum()
+                 %>&pageNum=<%=pageNum%>'">
                 
                 <input type="submit" class="btn btn-danger  btn-sm" value="회원삭제" 
-         		 onclick = "document.location.href='deleteForm.jsp?num=<%=member.getNum()%>'">
+         		 onclick = "document.location.href='deleteForm.jsp?num=<%=member.getNum()
+         		 %>&pageNum=<%=pageNum%>'">
                  
                 <input type="submit" class="btn btn-primary btn-sm" value = "회원목록"
-                 onclick = "document.location.href='list.jsp?num=<%=member.getNum()%>'">
+                 onclick = "document.location.href='list.jsp?pageNum=<%=pageNum%>'">
             </div>
         </div>
     </form>
